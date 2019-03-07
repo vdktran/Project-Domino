@@ -62,11 +62,12 @@ var player4html = document.getElementById("box4");
 
 // username function, get the value of the username input
 function getusername(i) {
-    var u = arraypn[i].value;
-    return u;
+    var ur = arraypn[i].value;
+    return ur;
 }
 
-var arrayboard = [domino01, domino00, domino33];
+var arrayboard = [];
+var boardend = arrayboard.length -1;
 var arraypioche = [];
 var arrayrack = [];
 var arrayplayer1 = [];
@@ -82,6 +83,10 @@ var player4 = new Player(order, getusername(3), arrayplayer4, player4html);
 
 // Create an array of the players
 var arrayplayers = [player1, player2, player3, player4];
+
+var u = 0;
+
+var currentplayer = arrayplayers[u].domi;
 
  if (nbofplayers === 2) {
     player1.order = 1;   
@@ -371,18 +376,22 @@ function shuffle() {
   
           //replace the element in the origin array with the randomly selected one
           dominoarray[a] = temp[0]; 
-          
      }
   }
 
 // pioche random
-
 function pioche(c) {
+    if (arraypioche.length >0) {
     var r = Math.floor(Math.random()*arraypioche.length);
     var dompioche = arraypioche[r];
     arrayplayers[c].domi.push(dompioche);
     document.getElementById("hand").appendChild(dompioche.html);
     arraypioche.splice(r, 1);
+    }
+
+    else {
+        alert("La pioche est vide");
+    }
 }
 
 //distribution of dominos to players
@@ -409,95 +418,65 @@ function distribution() {
 
 }
 
-// placement of dominos on the board
-
-
-
-// algorithm of the game - work in progress
-/*
-function game() {
-    var gagnantindertermine = (arrayplayer1.length>0 && arrayplayer2.length>0 && arrayplayer3.length>0 && arrayplayer4.length>0);
-
-    // while (gagnantindertermine === true){
-        for (var o=0; o < nbofplayers ; o++) {
-            arrayplayers[o].playerhtml.style.borderColor = "white";
-            var currentplayer = arrayplayers[o].domi;
-            for (var f=0; f < currentplayer.length; f++) {
-                document.getElementById("hand").appendChild(currentplayer[f].html);
-            }
-
-            if (arrayboard.length>0) {
-
-                for (var p = 0; p < currentplayer.length; p++) {
-                    var self = currentplayer[p];
-                    var boardend = arrayboard.length -1;
-                    if (currentplayer[p].tuilebottom === arrayboard[0].tuilebottom || currentplayer[p].tuiletop === arrayboard[0].tuilebottom || currentplayer[p].tuilebottom === arrayboard[0].tuiletop || currentplayer[p].tuiletop === arrayboard[0].tuiletop || currentplayer[p].tuilebottom === arrayboard[boardend].tuilebottom || currentplayer[p].tuiletop === arrayboard[boardend].tuilebottom || currentplayer[p].tuilebottom === arrayboard[boardend].tuiletop || currentplayer[p].tuiletop === arrayboard[boardend].tuiletop)
-                    { 
-                        self.html.addEventListener('click', function () {
-                            alert("positioning2");
-                        });
-                    }
-                
-                for (var w = 0; w < currentplayer.length; w++) {
-
-                        if (currentplayer[w].tuilebottom !== arrayboard[0].tuilebottom && currentplayer[w].tuiletop !== arrayboard[0].tuilebottom && currentplayer[w].tuilebottom !== arrayboard[0].tuiletop && currentplayer[w].tuiletop !== arrayboard[0].tuiletop && currentplayer[w].tuilebottom !== arrayboard[boardend].tuilebottom && currentplayer[w].tuiletop !== arrayboard[boardend].tuilebottom && currentplayer[w].tuilebottom !== arrayboard[boardend].tuiletop && currentplayer[w].tuiletop !== arrayboard[boardend].tuiletop)
-                        {
-                            pioche(o);
-                            alert("pioche works");
-                        }    
-                    }
-                }
-            }
-
-            if (arrayboard.length===0) {
-                // while (arrayboard.length===0) {
-                    for (var e = 0; e < currentplayer.length; e++) {
-                        var elf = currentplayer[e];
-                            elf.html.addEventListener('click', function () {
-                                alert("it works so far");
-                            });
-                    }
-                // }
-            }
-        }
-    // }
-}
-*/
-var o =0;
-var currentplayer = arrayplayers[o].domi;
 function highlight(pla) {
      arrayplayers[pla].playerhtml.style.borderColor = "orange";
 }
 
-
-function showhand(f) {
-for (var f=0; f < currentplayer.length; f++) {
-    document.getElementById("hand").appendChild(currentplayer[f].html);
-    }
+function stophighlight(pla) {
+    arrayplayers[pla].playerhtml.style.borderColor = "transparent";
 }
 
-function placement(p) {
-    var self = currentplayer[p];
-    var boardend = arrayboard.length -1;
-    if (arrayboard.length===0) {
-        self.html.addEventListener('click', function () {
-            document.getElementById("board").appendChild(currentplayer[p].html);
-        });
-        return;
-    }
+function showhand(h) {
+    for (var f=0; f < currentplayer.length; f++) {
+        document.getElementById("hand").appendChild(currentplayer[f].html);
+        }
+}
 
-    if (currentplayer[p].tuilebottom === arrayboard[0].tuilebottom || currentplayer[p].tuiletop === arrayboard[0].tuilebottom || currentplayer[p].tuilebottom === arrayboard[0].tuiletop || currentplayer[p].tuiletop === arrayboard[0].tuiletop || currentplayer[p].tuilebottom === arrayboard[boardend].tuilebottom || currentplayer[p].tuiletop === arrayboard[boardend].tuilebottom || currentplayer[p].tuilebottom === arrayboard[boardend].tuiletop || currentplayer[p].tuiletop === arrayboard[boardend].tuiletop)
-    { 
-        self.html.addEventListener('click', function () {
-            document.getElementById("board").appendChild(currentplayer[p].html);
+function hidehand(q) {
+    for (var f=0; f < currentplayer.length; f++) {
+        arrayplayers[q].playerhtml.appendChild(currentplayer[f].html);
+        }
+}
+
+function placement() {
+    currentplayer.forEach(function (dom, p) {
+        if (arrayboard.length == 0) {
+        dom.html.addEventListener('click', function () {
+            document.getElementById("board").appendChild(dom.html);
+            arrayboard.push(dom);
+            currentplayer.splice(p, 1);
         });
-        return;
-    }
-    else {
-        alert("Injouable!");
-        document.getElementById("pioche").addEventListener('click', pioche(o));
-        return;
-    }
+        }
+    })
+
+    currentplayer.forEach(function (dom, p) {
+        console.log(arrayboard[0]);
+        var matchingdominos = [arrayboard[0], arrayboard[arrayboard.length -1]];
+        if (dom.tuilebottom == arrayboard[0].tuilebottom || dom.tuiletop == arrayboard[0].tuilebottom || dom.tuilebottom == arrayboard[0].tuiletop || dom.tuiletop == arrayboard[0].tuiletop || dom.tuilebottom == arrayboard[arrayboard.length -1].tuilebottom || dom.tuiletop == arrayboard[arrayboard.length -1].tuilebottom || dom.tuilebottom == arrayboard[arrayboard.length -1].tuiletop || dom.tuiletop == arrayboard[arrayboard.length -1].tuiletop)
+        { 
+            // put positioning here
+        dom.html.addEventListener('click', function () {
+            // document.getElementById("board").appendChild(dom.html);
+            matchingdominos.forEach(function (match){
+                if (dom.tuilebottom == match.tuilebottom || dom.tuiletop == match.tuilebottom || dom.tuilebottom == match.tuiletop || dom.tuiletop == match.tuiletop)
+                    {
+                        match.html.style.borderColor = "red";
+                    }
+            });
+            // arrayboard.push(dom);
+            // currentplayer.splice(p, 1);
+        });
+        
+        }
+    })
+
+   
+        
+        document.getElementById("pioche").addEventListener('click', function() {
+            pioche(u);
+        });
+        
+
 }
 
 
@@ -509,35 +488,34 @@ function startgame() {
     }
     else {
         document.getElementById("player1").textContent = player1.username;
-    };
+    }
 
     if (arraypn[1].value == "") {
         document.getElementById("player2").textContent = "Joueur 2";
     }
     else {
         document.getElementById("player2").textContent = player2.username;
-    };
+    }
 
     if (arraypn[2].value == "") {
         document.getElementById("player3").textContent = "Joueur 3";
     }
     else {
         document.getElementById("player3").textContent = player3.username;
-    };
+    }
 
     if (arraypn[3].value == "") {
         document.getElementById("player4").textContent = "Joueur 4";
     }
     else {
         document.getElementById("player4").textContent = player4.username;
-    };
+    }
     document.getElementById("game").style.visibility = "visible";
     document.getElementById("game").style.opacity = 1;
     document.getElementById("game").style.zIndex = 15;
     document.getElementById("startmenu").style.display = "none";
 
     shuffle();
-    console.log(dominoarray);
     distribution();
     console.log(arrayplayer1);
     console.log(arrayplayer2);
@@ -545,16 +523,14 @@ function startgame() {
     console.log(arrayplayer4);
     console.log(arraypioche);
     console.log(dominoarray);
-    console.log(arrayboard[0]);
-   
-    // game();
-    highlight(0);
-    showhand(0);
-    placement(0);
+    starttour(0);
+    
 }
 
 var start = document.getElementById("startbtn");
 start.addEventListener('click', startgame);
+
+
 
 var menubtn = document.getElementById("menubutton");
 menubtn.addEventListener('click', function () {
@@ -567,3 +543,72 @@ menubtn.addEventListener('click', function () {
     document.getElementById("menucontainer").style.visibility = "hidden";
     document.getElementById("menucontainer").style.opacity = 0;
 });
+
+
+function starttour(x) {
+    highlight(x);
+    showhand(x);
+    placement();
+}
+
+function endtour(x) {
+    stophighlight(x);
+    hidehand(x);
+}
+
+function playerswitch() {
+    if(u===0) {
+        endtour(0);
+        u=1;
+        currentplayer = arrayplayers[1].domi;
+        starttour(1);
+    }
+
+    else if(u===1) {
+        if (nbofplayers===2) {
+            endtour(1);
+            u=0;
+            currentplayer = arrayplayers[0].domi;
+            starttour(0);
+        }
+
+        else  {
+            endtour(1);
+            u=2;
+            currentplayer = arrayplayers[2].domi;
+            starttour(2);
+        }
+    }
+
+    else if(u===2) {
+        if (nbofplayers===3) {
+            endtour(2);
+            u=0;
+            currentplayer = arrayplayers[0].domi;
+            starttour(0);
+        }
+
+        else  {
+            endtour(2);
+            u=3;
+            currentplayer = arrayplayers[3].domi;
+            starttour(3);
+        }
+    }
+
+    else if(u==3) {
+        endtour(3);
+        u=0;
+        currentplayer = arrayplayers[0].domi;
+        starttour(0);
+    }
+
+    else {
+        return;
+    }
+}
+
+document.getElementById("switch").addEventListener('click', function() {
+    playerswitch();
+    console.log(currentplayer);
+})
